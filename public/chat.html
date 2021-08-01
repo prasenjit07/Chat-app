@@ -12,21 +12,26 @@
 <body>
 
     <div class="chat">
-        <div id="sidebar" class="chat__sidebar">
+        
+        <canvas style="border:1px solid #000;" id="whiteboard" class="chat__whiteboard">
 
-        </div>
+        </canvas>
         <div class="chat__main">
             <div id="messages" class="chat__messages"></div>
-            <!-- <button id="increment">+1</button> -->
+            
 
             <div class="compose">
                 <form id="message-form">
                     <input name="message" placeholder="Message" required autocomplete="off">
                     <button id="sendMessage">Send</button>
                 </form>
+                <button id="send-location">Send Location</button>
             </div>
 
-            <button id="send-location">Send Location</button>
+            
+        </div>
+        <div id="sidebar" class="chat__sidebar">
+
         </div>
     </div>
 

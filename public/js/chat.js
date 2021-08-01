@@ -18,24 +18,26 @@ const {username,room } = Qs.parse(location.search, {ignoreQueryPrefix: true})
 
 const autoscroll = ()=>{
     // New message element
-    const $newMessage = $messages.lastElementChild
+    // const $newMessage = $messages.lastElementChild
 
     // Height of the new message
-    const newMessageStyles = getComputedStyle($newMessage)
-    const newMessageMargin = parseInt(newMessageStyles.marginBottom)
-    const newMessageHeight = $newMessage.offsetHeight + newMessageMargin
+    // const newMessageStyles = getComputedStyle($newMessage)
+    // const newMessageMargin = parseInt(newMessageStyles.marginBottom)
+    // const newMessageHeight = $newMessage.offsetHeight + newMessageMargin
 
     // Visible Height
-    const visibleHeight = $messages.offsetHeight
+    // const visibleHeight = $messages.offsetHeight
     
     // Height of message container
-    const containerHeight = $messages.scrollHeight
+    // const containerHeight = $messages.scrollHeight
 
     // How far have I scrolled
-    const scrollOffset = $messages.scrollTop + visibleHeight
-    if(containerHeight - newMessageHeight <= scrollOffset){
-        $messages.scrollTop = $messages.scrollHeight
-    }
+    // const scrollOffset = $messages.scrollTop + visibleHeight
+    // if(containerHeight - newMessageHeight <= scrollOffset){
+    //     $messages.scrollTop = $messages.scrollHeight
+    // }
+
+    $messages.scrollTop = $messages.scrollHeight
 }    
 
 socket.on('message', (message)=>{
@@ -67,6 +69,47 @@ socket.on('roomData', ({room, users}) =>{
     })
     document.querySelector('#sidebar').innerHTML = html
 })
+
+var canvas = document.getElementById('whiteboard');
+canvas.width = "750"
+canvas.height = window.innerHeight
+
+var ctx = canvas.getContext("2d")
+
+let x;
+let y;
+let mouseDown = false
+ctx.strokeStyle = 'white';
+window.onmousedown = (e) => {
+    ctx.moveTo(x, y)
+    socket.emit('moveCursor',{x,y})
+    mouseDown = true
+}
+
+window.onmouseup = (e) => {
+    mouseDown = false
+}
+
+socket.on('ondraw', ({ x, y }) => {
+    ctx.lineTo(x, y);
+    ctx.stroke();
+})
+
+socket.on('cursor', ({ x, y }) => {
+    ctx.moveTo(x, y)
+})
+
+window.onmousemove = (e) => {
+    x = e.clientX;
+    y = e.clientY;
+    console.log({ x, y })
+    if (mouseDown) {
+        socket.emit('draw', { x, y });
+        ctx.lineTo(x, y);
+        ctx.stroke();
+    }
+
+}
 
 $messageForm.addEventListener('submit',e=>{
     e.preventDefault()

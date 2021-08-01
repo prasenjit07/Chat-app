@@ -93,7 +93,15 @@ button:disabled {
     height: 100vh;
     color: white;
     background: #333744;
-    width: 225px;
+    width: 250px;
+    overflow-y: scroll
+}
+
+.chat__whiteboard {
+    height: 100vh;
+    color: white;
+    background: #000;
+    width: 750px;
     overflow-y: scroll
 }
 

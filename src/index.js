@@ -37,9 +37,19 @@ io.on('connection', (socket) => {
         callback()
     })
 
+    socket.on('draw',({x,y}) =>{
+        const user = getUser(socket.id)
+        socket.broadcast.to(user.room).emit('ondraw',{x,y})
+    })
+
+    socket.on('moveCursor',({x,y}) =>{
+        const user = getUser(socket.id)
+        socket.broadcast.to(user.room).emit('cursor',{x,y})
+    })
+
     socket.on('sendMessage', (message, callback) => {
         const user = getUser(socket.id)
-        // console.log(user)
+        console.log(user)
         const filter = new Filter()
 
         if (filter.isProfane(message)) {
